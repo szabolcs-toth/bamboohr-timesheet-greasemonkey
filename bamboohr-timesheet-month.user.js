@@ -20,8 +20,7 @@
    Load BambooHR for the first time with the script and then open this script Storage preferences and edit there.
  */
 const DEFAULT_TEMPLATES = {
-  'default': [{ start: '8:15', end: '13:00' }, { start: '13:30', end: '16:45' }],
-  'Fri': [{ start: '8:15', end: '14:30' }, { start: '15:30', end: '17:15' }]
+  'default': [{ start: '8:15', end: '13:00' }, { start: '13:20', end: '16:35' }]
 };
 
 const DEFAULT_ENTROPY_MINUTES = 10;
