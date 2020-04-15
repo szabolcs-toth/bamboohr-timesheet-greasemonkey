@@ -9,7 +9,7 @@
 // @grant        GM.setValue
 // @homepageURL  https://github.com/skgsergio/bamboohr-timesheet-greasemonkey/
 // @supportURL   https://github.com/skgsergio/bamboohr-timesheet-greasemonkey/issues
-// @updateURL    https://github.com/ribugent/bamboohr-timesheet-greasemonkey/raw/master/bamboohr-timesheet-month.user.js
+// @updateURL    https://raw.githubusercontent.com/ribugent/bamboohr-timesheet-greasemonkey/master/bamboohr-timesheet-month.user.js
 // ==/UserScript==
 
 'use strict';
