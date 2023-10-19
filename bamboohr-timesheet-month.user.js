@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BambooHR Timesheet Fill Month
 // @namespace    month.timesheet.bamboohr.sconde.net
-// @version      1.2
+// @version      1.5
 // @description  Fill BambooHR Timesheet month with templates
 // @author       Sergio Conde
 // @match        https://*.bamboohr.com/employees/timesheet/*
@@ -9,7 +9,7 @@
 // @grant        GM.setValue
 // @homepageURL  https://github.com/skgsergio/bamboohr-timesheet-greasemonkey/
 // @supportURL   https://github.com/skgsergio/bamboohr-timesheet-greasemonkey/issues
-// @updateURL    https://raw.githubusercontent.com/ribugent/bamboohr-timesheet-greasemonkey/master/bamboohr-timesheet-month.user.js
+// @updateURL    https://raw.githubusercontent.com/skgsergio/bamboohr-timesheet-greasemonkey/master/bamboohr-timesheet-month.user.js
 // ==/UserScript==
 
 'use strict';
@@ -20,10 +20,8 @@
    Load BambooHR for the first time with the script and then open this script Storage preferences and edit there.
  */
 const DEFAULT_TEMPLATES = {
-  'default': [{ start: '8:15', end: '13:00' }, { start: '13:20', end: '16:35' }]
+  'default': [{ start: '8:40', end: '17:00' }]
 };
-
-const DEFAULT_ENTROPY_MINUTES = 10;
 
 const CONTAINER_CLASSLIST = 'TimesheetSummary__clockButtonWrapper';
 const BUTTON_CLASSLIST = 'fab-Button fab-Button--small fab-Button--width100';
@@ -37,14 +35,7 @@ const BUTTON_CLASSLIST = 'fab-Button fab-Button--small fab-Button--width100';
     GM.setValue('TEMPLATES', TEMPLATES);
   }
 
-  let ENTROPY_MINUTES = await GM.getValue('ENTROPY_MINUTES');
-
-  if (!ENTROPY_MINUTES) {
-    ENTROPY_MINUTES = DEFAULT_ENTROPY_MINUTES;
-    GM.setValue('ENTROPY_MINUTES', ENTROPY_MINUTES);
-  }
-
-  /* Fill Month */
+    /* Fill Month */
   let container_fill = document.createElement('div');
   container_fill.classList.value = CONTAINER_CLASSLIST;
 
@@ -88,17 +79,14 @@ const BUTTON_CLASSLIST = 'fab-Button fab-Button--small fab-Button--width100';
         slots = TEMPLATES[dow];
       }
 
-      /* Generate the entries for this day */
-      let minute_diff = [...Array(slots.length)].map(_ => Math.ceil(Math.random() * ENTROPY_MINUTES));
-
       for (const [idx, slot] of slots.entries()) {
         tracking_id += 1;
 
         let start = new Date(`${day} ${slot.start}`)
-        start.setMinutes(start.getMinutes() + minute_diff[idx])
+        start.setMinutes(start.getMinutes())
 
         let end = new Date(`${day} ${slot.end}`)
-        end.setMinutes(end.getMinutes() + minute_diff[minute_diff.length - 1 - idx])
+        end.setMinutes(end.getMinutes())
 
         entries.push({
           id: null,
