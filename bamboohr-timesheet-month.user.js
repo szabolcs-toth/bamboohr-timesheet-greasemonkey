@@ -1,15 +1,13 @@
 // ==UserScript==
 // @name         BambooHR Timesheet Fill Month
 // @namespace    month.timesheet.bamboohr.sconde.net
-// @version      1.5
+// @version      1.6
 // @description  Fill BambooHR Timesheet month with templates
-// @author       Sergio Conde
+// @author       Szabolcs Toth
 // @match        https://*.bamboohr.com/employees/timesheet/*
-// @grant        GM.getValue
-// @grant        GM.setValue
-// @homepageURL  https://github.com/skgsergio/bamboohr-timesheet-greasemonkey/
-// @supportURL   https://github.com/skgsergio/bamboohr-timesheet-greasemonkey/issues
-// @updateURL    https://raw.githubusercontent.com/skgsergio/bamboohr-timesheet-greasemonkey/master/bamboohr-timesheet-month.user.js
+// @homepageURL  https://github.com/szabolcs-toth/greasemonkey-scripts/
+// @supportURL   https://github.com/szabolcs-toth/greasemonkey-scripts/issues
+// @updateURL    https://raw.githubusercontent.com/szabolcs-toth/greasemonkey-scripts/master/bamboohr-timesheet-month.user.js
 // ==/UserScript==
 
 'use strict';
@@ -19,23 +17,32 @@
 
    Load BambooHR for the first time with the script and then open this script Storage preferences and edit there.
  */
+
+const DEFAULT_PROJECT_ID = 9
+const DEFAULT_TASK_ID = 15
+
 const DEFAULT_TEMPLATES = {
-  'default': [{ start: '8:40', end: '17:00' }]
+  'default': [
+    { start: '8:40', end: '12:00', projectId : DEFAULT_PROJECT_ID, taskId : DEFAULT_TASK_ID},
+    { start: '12:00', end: '12:20', projectId : null, taskId : null},
+    { start: '12:20', end: '17:00', projectId : DEFAULT_PROJECT_ID, taskId : DEFAULT_TASK_ID}
+  ]
 };
+
+const DEFAULT_ENTROPY_MINUTES = 0;
 
 const CONTAINER_CLASSLIST = 'TimesheetSummary__clockButtonWrapper';
 const BUTTON_CLASSLIST = 'fab-Button fab-Button--small fab-Button--width100';
 
 /* Here be dragons */
 (async function() {
-  let TEMPLATES = await GM.getValue('TEMPLATES');
+  let TEMPLATES = DEFAULT_TEMPLATES;
+  GM.setValue('TEMPLATES', TEMPLATES);
 
-  if (!TEMPLATES) {
-    TEMPLATES = DEFAULT_TEMPLATES;
-    GM.setValue('TEMPLATES', TEMPLATES);
-  }
+  let ENTROPY_MINUTES = DEFAULT_ENTROPY_MINUTES;
+  GM.setValue('ENTROPY_MINUTES', ENTROPY_MINUTES);
 
-    /* Fill Month */
+  /* Fill Month */
   let container_fill = document.createElement('div');
   container_fill.classList.value = CONTAINER_CLASSLIST;
 
@@ -78,7 +85,6 @@ const BUTTON_CLASSLIST = 'fab-Button fab-Button--small fab-Button--width100';
       if (TEMPLATES.hasOwnProperty(dow)) {
         slots = TEMPLATES[dow];
       }
-
       for (const [idx, slot] of slots.entries()) {
         tracking_id += 1;
 
@@ -95,6 +101,8 @@ const BUTTON_CLASSLIST = 'fab-Button fab-Button--small fab-Button--width100';
           date: day,
           start: `${start.getHours()}:${('0' + start.getMinutes()).slice(-2)}`,
           end: `${end.getHours()}:${('0' + end.getMinutes()).slice(-2)}`,
+          projectId: slot.projectId,
+          taskId: slot.taskId,
           note: ''
         });
       }
