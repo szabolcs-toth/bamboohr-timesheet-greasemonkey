@@ -8,6 +8,8 @@
 // @homepageURL  https://github.com/szabolcs-toth/greasemonkey-scripts/
 // @supportURL   https://github.com/szabolcs-toth/greasemonkey-scripts/issues
 // @updateURL    https://raw.githubusercontent.com/szabolcs-toth/greasemonkey-scripts/master/bamboohr-timesheet-month.user.js
+// @grant       GM.getValue
+// @grant       GM.setValue
 // ==/UserScript==
 
 'use strict';
